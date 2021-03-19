@@ -17,30 +17,41 @@ set -euo pipefail
 # TODO make a more detailed help.
 # TODO add check to make sure that we are piping to the correct virtual env.
 
-PACKAGE="${PACKAGE:-pfmsoft}"
+# PACKAGE="${PACKAGE:-{{ cookiecutter.project_slug }}}"
 SRC_PATH="src/"
 BROWSER="google-chrome"
 CODE_PATHS=("./src" "./tests")
+PYTHON_VENV_VERSION="${PYTHON_VENV_VERSION:-3.9}"
 
-function project:init:dirs() {
-    # make the project subdirectories. I think cookiecutter is better here
-    DIRS=("./src/pfmsoft" "./docs" "./tests/pfmsoft")
-    for d in "${DIRS[@]}"; do
-        mkdir -p "$d"
-    done
-    FILES=("./setup.cfg" "./setup.py" "tox.ini" "requirements.txt" "requirements_dev.txt"
-        "pyproject.toml" "MANIFEST.in" "LICENSE" "HISTORY.rst" "CONTRIBUTING.rst" "AUTHORS.rst"
-        ".pre-commit-config.yaml" "README.rst" ".gitignore" ".coveragerc"
-        "./src/pfmsoft/__init__.py" "./tests/pfmsoft/__init__.py" "./tests/__init__.py")
-    for f in "${FILES[@]}"; do
-        touch "$f"
-    done
+# function project:init:dirs() {
+#     # make the project subdirectories. I think cookiecutter is better here
+#     DIRS=("./src/pfmsoft" "./docs" "./tests/pfmsoft")
+#     for d in "${DIRS[@]}"; do
+#         mkdir -p "$d"
+#     done
+#     FILES=("./setup.cfg" "./setup.py" "tox.ini" "requirements.txt" "requirements_dev.txt"
+#         "pyproject.toml" "MANIFEST.in" "LICENSE" "HISTORY.rst" "CONTRIBUTING.rst" "AUTHORS.rst"
+#         ".pre-commit-config.yaml" "README.rst" ".gitignore" ".coveragerc"
+#         "./src/pfmsoft/__init__.py" "./tests/pfmsoft/__init__.py" "./tests/__init__.py")
+#     for f in "${FILES[@]}"; do
+#         touch "$f"
+#     done
+# }
+
+function build { ## builds source and wheel package
+    clean:build
+    python setup.py sdist
+	python setup.py bdist_wheel
+	ls -l dist
+}
+
+function release() { ## package and upload a release
+    twine upload dist/*
 }
 
 function project:init:all() {
-
-    project:init:dirs
     venv:init
+    pip3:upgrade:pip
     pip3:install:all
 }
 
@@ -56,12 +67,13 @@ function project:install:editable() {
     _pip3 install --editable .
 }
 
-function venv:init() {
-    # makes a venv and installs dev dependencies
-    python3 -m venv ./.venv
+function project:install() {
     # shellcheck disable=SC1091
-    source ./.venv/bin/activate
-    PIP_REQUIRE_VIRTUALENV=true pip install -U pip setuptools wheel
+    _pip3 install .
+}
+
+function venv:init() { ## makes a venv in the project directory
+    python${PYTHON_VENV_VERSION} -m venv ./.venv
 }
 
 function venv:remove() {
@@ -100,6 +112,11 @@ function pip3:upgrade() {
     _pip3 install "${@}" --upgrade
 }
 
+function pip3:upgrade:pip() {
+    source ./.venv/bin/activate
+    PIP_REQUIRE_VIRTUALENV=true pip3 install -U pip setuptools wheel
+}
+
 function pip3:upgrade:all() {
     _pip3 install $(cat ./requirements.txt | sed /^\#/d | tr '\n' ' ') --upgrade
     _pip3 install $(cat ./requirements_dev.txt | sed /^\#/d | tr '\n' ' ') --upgrade
@@ -115,6 +132,17 @@ function pytest-cov() {
     # Get test coverage with pytest-cov
     python3 -m pytest --cov test/ --cov-report term-missing "${@}"
 }
+
+function tox() {
+    tox
+}
+
+# function coverage() {
+#     python3 -m coverage run --source "${SRC_PATH}""${PACKAGE}" -m pytest
+#     python3 -m coverage report -m
+#     python3 -m coverage html
+#     "${BROWSER}" htmlcov/index.html
+# }
 
 function git:init() {
     git init
@@ -168,11 +196,9 @@ function format() {
     format:black "${CODE_PATHS[@]}"
 }
 
-function coverage() {
-    python3 -m coverage run --source "${SRC_PATH}""${PACKAGE}" -m pytest
-    python3 -m coverage report -m
-    python3 -m coverage html
-    "${BROWSER}" htmlcov/index.html
+function format:diff() {
+    format:isort "${CODE_PATHS[@]}" --diff
+    format:black "${CODE_PATHS[@]}" --diff
 }
 
 function lint:mypy() {
