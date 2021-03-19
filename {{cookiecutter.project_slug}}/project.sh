@@ -22,6 +22,15 @@ SRC_PATH="src/"
 BROWSER="google-chrome"
 CODE_PATHS=("./src" "./tests")
 PYTHON_VENV_VERSION="${PYTHON_VENV_VERSION:-3.9}"
+# https://stackoverflow.com/questions/4774054/reliable-way-for-a-bash-script-to-get-the-full-path-to-itself
+SCRIPT_PATH=$(realpath $0)
+# HELP_SCRIPT="import re, sys
+
+# for line in sys.stdin:
+# 	match = re.match(r'^([a-zA-Z_-]+):.*?## (.*)$$', line)
+# 	if match:
+# 		target, help = match.groups()
+# 		print("%-20s %s" % (target, help))"
 
 # function project:init:dirs() {
 #     # make the project subdirectories. I think cookiecutter is better here
@@ -37,6 +46,24 @@ PYTHON_VENV_VERSION="${PYTHON_VENV_VERSION:-3.9}"
 #         touch "$f"
 #     done
 # }
+
+function print:script() {
+    echo $SCRIPT_PATH
+    python3 - << EOF
+from pathlib import Path
+import re
+script_path = Path("$SCRIPT_PATH")
+with open(script_path) as file:
+    for line in file:
+        match = re.match(r'^function\s([\w,\:]*)\(\)\s{\s##\s(.*)', line)
+        if match is not None:
+            target, help = match.groups()
+            print(target,help)
+
+
+
+EOF
+}
 
 function build { ## builds source and wheel package
     clean:build
