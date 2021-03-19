@@ -6,6 +6,7 @@ tox
 coverage
 Sphinx
 sphinx-autodoc-typehints
+sphinx_rtd_theme
 snooty-lextudio
 twine
 Click
