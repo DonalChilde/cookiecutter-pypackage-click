@@ -6,5 +6,4 @@ black
 isort
 pylint
 mypy
-
-
+pre-commit
