@@ -2,21 +2,8 @@
 
 """Tests for `{{ cookiecutter.project_slug }}` package."""
 
-import pytest
-
 from click.testing import CliRunner
-
-from {{ cookiecutter.project_slug }} import {{ cookiecutter.project_slug }},cli
-
-
-@pytest.fixture
-def response():
-    """Sample pytest fixture.
-
-    See more at: http://doc.pytest.org/en/latest/fixture.html
-    """
-    # import requests
-    # return requests.get('https://github.com/audreyr/cookiecutter-pypackage')
+from {{cookiecutter.project_slug}} import cli, {{ cookiecutter.project_slug }}
 
 
 def test_content(response):
@@ -34,7 +21,3 @@ def test_command_line_interface():
     help_result = runner.invoke(cli.main, ['--help'])
     assert help_result.exit_code == 0
     assert '--help  Show this message and exit.' in help_result.output
-
-
-
-
