@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 
-# Master copy located at pfm_util
+# Master copy located at ?
 # Version 1.0
 # 2021-03-15T16:27:09Z
 # Note: this script expects to live in the top directory of a project.
 
-#https://github.com/nickjj/docker-flask-example/blob/main/run
+# Ideas shamelessly lifted from:
+# https://github.com/nickjj/docker-flask-example/blob/main/run
+# https://github.com/audreyfeldroy/cookiecutter-pypackage/blob/master/%7B%7Bcookiecutter.project_slug%7D%7D/Makefile
 
 # -e Exit immediately if a pipeline returns a non-zero status.
 # -u Treat unset variables and parameters other than the special parameters ‘@’ or ‘*’ as an error when performing parameter expansion.
@@ -14,175 +16,23 @@ set -euo pipefail
 
 # TODO make completions for script.
 # https://iridakos.com/programming/2018/03/01/bash-programmable-completion-tutorial
-# TODO make a more detailed help.
-# TODO add check to make sure that we are piping to the correct virtual env.
+# TODO add check to make sure that we are piping to the correct virtual env?
 
-# PACKAGE="${PACKAGE:-{{ cookiecutter.project_slug }}}"
-SRC_PATH="src/"
+PACKAGE="${PACKAGE:-{{ cookiecutter.project_slug }}}"
+# SRC_PATH="src/"
 BROWSER="google-chrome"
 CODE_PATHS=("./src" "./tests")
 PYTHON_VENV_VERSION="${PYTHON_VENV_VERSION:-3.9}"
 # https://stackoverflow.com/questions/4774054/reliable-way-for-a-bash-script-to-get-the-full-path-to-itself
 SCRIPT_PATH=$(realpath $0)
-# HELP_SCRIPT="import re, sys
 
-# for line in sys.stdin:
-# 	match = re.match(r'^([a-zA-Z_-]+):.*?## (.*)$$', line)
-# 	if match:
-# 		target, help = match.groups()
-# 		print("%-20s %s" % (target, help))"
-
-# function project:init:dirs() {
-#     # make the project subdirectories. I think cookiecutter is better here
-#     DIRS=("./src/pfmsoft" "./docs" "./tests/pfmsoft")
-#     for d in "${DIRS[@]}"; do
-#         mkdir -p "$d"
-#     done
-#     FILES=("./setup.cfg" "./setup.py" "tox.ini" "requirements.txt" "requirements_dev.txt"
-#         "pyproject.toml" "MANIFEST.in" "LICENSE" "HISTORY.rst" "CONTRIBUTING.rst" "AUTHORS.rst"
-#         ".pre-commit-config.yaml" "README.rst" ".gitignore" ".coveragerc"
-#         "./src/pfmsoft/__init__.py" "./tests/pfmsoft/__init__.py" "./tests/__init__.py")
-#     for f in "${FILES[@]}"; do
-#         touch "$f"
-#     done
-# }
-
-function print:script() {
-    echo $SCRIPT_PATH
-    python3 - << EOF
-from pathlib import Path
-import re
-script_path = Path("$SCRIPT_PATH")
-with open(script_path) as file:
-    for line in file:
-        match = re.match(r'^function\s([\w,\:]*)\(\)\s{\s##\s(.*)', line)
-        if match is not None:
-            target, help = match.groups()
-            print(target,help)
-
-
-
-EOF
-}
-
-function build { ## builds source and wheel package
+function clean() { ## Clean build,python, and test artifacts.
     clean:build
-    python setup.py sdist
-	python setup.py bdist_wheel
-	ls -l dist
+    clean:pyc
+    clean:test
 }
 
-function release() { ## package and upload a release
-    twine upload dist/*
-}
-
-function project:init:all() {
-    venv:init
-    pip3:upgrade:pip
-    pip3:install:all
-}
-
-function project:reset_venv() {
-    venv:remove
-    venv:init
-    pip3:install:all
-
-}
-
-function project:install:editable() {
-    # shellcheck disable=SC1091
-    _pip3 install --editable .
-}
-
-function project:install() {
-    # shellcheck disable=SC1091
-    _pip3 install .
-}
-
-function venv:init() { ## makes a venv in the project directory
-    python${PYTHON_VENV_VERSION} -m venv ./.venv
-}
-
-function venv:remove() {
-    # removes a venv
-    printf "\nDeleting ./.venv deactivate any terminal windows that were using that venv.\n"
-    deactivate || true
-    rm -r ./.venv/ || true
-}
-
-function _pip3() {
-    printf "\nUsing virtual env located at:\n%s\n" "$VIRTUAL_ENV"
-    PIP_REQUIRE_VIRTUALENV=true pip3 "${@}"
-}
-
-function pip3:install() {
-    # shellcheck disable=SC1091
-    # source ./.venv/bin/activate
-    _pip3 install "${@}"
-}
-
-function pip3:uninstall() {
-    _pip3 uninstall "${@}"
-}
-
-function pip3:install:all() {
-    _pip3 install -r ./requirements_dev.txt
-    _pip3 install -r ./requirements.txt
-}
-
-function pip3:outdated() {
-    # List any installed packages that are outdated
-    _pip3 list --outdated
-}
-
-function pip3:upgrade() {
-    _pip3 install "${@}" --upgrade
-}
-
-function pip3:upgrade:pip() {
-    source ./.venv/bin/activate
-    PIP_REQUIRE_VIRTUALENV=true pip3 install -U pip setuptools wheel
-}
-
-function pip3:upgrade:all() {
-    _pip3 install $(cat ./requirements.txt | sed /^\#/d | tr '\n' ' ') --upgrade
-    _pip3 install $(cat ./requirements_dev.txt | sed /^\#/d | tr '\n' ' ') --upgrade
-    # _pip3 install "$(pip list --outdated | tail +3 | grep -v sdist | awk '{ print $1 }')" --upgrade
-}
-
-function pytest() {
-    # Run test suite with pytest
-    python3 -m pytest tests/ "${@}"
-}
-
-function pytest-cov() {
-    # Get test coverage with pytest-cov
-    python3 -m pytest --cov test/ --cov-report term-missing "${@}"
-}
-
-function tox() {
-    tox
-}
-
-# function coverage() {
-#     python3 -m coverage run --source "${SRC_PATH}""${PACKAGE}" -m pytest
-#     python3 -m coverage report -m
-#     python3 -m coverage html
-#     "${BROWSER}" htmlcov/index.html
-# }
-
-function git:init() {
-    git init
-    # To set up the git hook scripts run
-    pre-commit install
-}
-
-function git:install_pre_commit() {
-    # To set up the git hook scripts run
-    pre-commit install
-}
-
-function clean:build() {
+function clean:build() { ## Clean build artifacts.
     rm -fr build/
     rm -fr dist/
     rm -fr .eggs/
@@ -190,62 +40,202 @@ function clean:build() {
     find . -name '*.egg' -exec rm -f {} +
 }
 
-function clean:pyc() {
+function clean:pyc() { ## Clean python aritfacts.
     find . -name '*.pyc' -exec rm -f {} +
     find . -name '*.pyo' -exec rm -f {} +
     find . -name '*~' -exec rm -f {} +
     find . -name '__pycache__' -exec rm -fr {} +
 }
 
-function clean:test() {
+function clean:test() { ## Clean test artifacts.
     rm -fr .tox/
     rm -f .coverage
     rm -fr htmlcov/
     rm -fr .pytest_cache
+    rm -fr .mypy_cache
 }
 
-function format:isort() {
-    # TODO change this to take a variable
-    # add a function to format the whoel project
+function dist:build() { ## builds source and wheel package.
+    clean:build
+    python setup.py sdist
+	python setup.py bdist_wheel
+	ls -l dist
+}
+
+function dist:release() { ## package and upload a release.
+    twine upload dist/*
+}
+
+function docs:build() { ## Build documentation.
+    rm -f docs/$PACKAGE.rst
+	rm -f docs/modules.rst
+	sphinx-apidoc -o ./docs/ ./src/$PACKAGE
+    sphinx-build -b html ./docs ./docs/_build
+}
+
+function docs:serve() { ## Open docs in a web browser
+    echo "Not implemented yet"
+}
+
+function format:isort() { ## Takes Arguments. Run isort.
     printf "Running isort on %s\n" "${@}"
     python3 -m isort "${@}"
-    # python3 -m isort "./tests"
 }
 
-function format:black() {
+function format:black() { ## Takes Arguments. Run isort.
     printf "Running black on %s\n" "${@}"
     python3 -m black "${@}"
-    # python3 -m black "./tests"
 }
 
-function format() {
+function format:isort:diff() { ## Takes Arguments. Run isort --diff.
+    printf "Running isort --diff on %s\n" "${@}"
+    python3 -m isort "${@}" --diff
+}
+
+function format:black:diff() { ## Takes Arguments. Run isort --diff.
+    printf "Running black --diff on %s\n" "${@}"
+    python3 -m black "${@}" --diff
+}
+
+function format() { ## isort and black on project.
     format:isort "${CODE_PATHS[@]}"
     format:black "${CODE_PATHS[@]}"
 }
 
-function format:diff() {
-    format:isort "${CODE_PATHS[@]}" --diff
-    format:black "${CODE_PATHS[@]}" --diff
+function format:diff() { ## isort --diff and black --diff on project.
+    format:isort:diff "${CODE_PATHS[@]}"
+    format:black:diff "${CODE_PATHS[@]}"
 }
 
-function lint:mypy() {
+function git:init() { ## Set up local git repo, and install git pre-commit hooks.
+    git init
+    git:pre-commit
+}
+
+function git:pre-commit() { ## Set up the git hook scripts.
+    pre-commit install
+}
+
+function help() { ## Get script help.
+    printf "\nInstructions for the script located at:\n$SCRIPT_PATH\n"
+    _help
+}
+
+function lint() { ## Run mypy and pylint on project.
+    lint:mypy "${CODE_PATHS[@]}"
+    lint:pylint "${CODE_PATHS[@]}"
+}
+
+function lint:mypy() { ## Takes Arguments. Run mypy.
     set +e
     printf "Running mypy on %s\n" "${@}"
     python3 -m mypy "${@}"
 }
 
-function lint:pylint() {
+function lint:pylint() { ## Takes Arguments. Run pylint.
     set +e
     printf "Running pylint on %s\n" "${@}"
     python3 -m pylint "${@}"
 }
-function lint() {
-    lint:mypy "${CODE_PATHS[@]}"
-    lint:pylint "${CODE_PATHS[@]}"
 
+function pip3:install() { ## Takes arguments. Install requested packages.
+    _pip3 install "${@}"
 }
 
-function help() {
+function pip3:install:editable() { ## Install project as editable in venv.
+    # shellcheck disable=SC1091
+    _pip3 install --editable .
+}
+
+function pip3:install:project() { ## Install project in venv.
+    # shellcheck disable=SC1091
+    _pip3 install .
+}
+
+function pip3:install:req() { ## Install from both requirements files
+    _pip3 install -r ./requirements_dev.txt
+    _pip3 install -r ./requirements.txt
+}
+
+function pip3:outdated() { ## List any installed packages that are outdated.
+    _pip3 list --outdated
+}
+
+function pip3:uninstall() { ## Takes arguments. Remove requested packages.
+    _pip3 uninstall "${@}"
+}
+
+function pip3:upgrade() { ## Takes arguments. Upgrade requested packages.
+    _pip3 install "${@}" --upgrade
+}
+
+function pip3:upgrade:all() { ## Upgrade only packages found in either requirements file.
+    _pip3 install $(cat ./requirements.txt | sed /^\#/d | tr '\n' ' ') --upgrade
+    _pip3 install $(cat ./requirements_dev.txt | sed /^\#/d | tr '\n' ' ') --upgrade
+    # _pip3 install "$(pip list --outdated | tail +3 | grep -v sdist | awk '{ print $1 }')" --upgrade
+}
+
+function pip3:upgrade:pip() { ## Upgrade pip, wheel, setuptools.
+    PIP_REQUIRE_VIRTUALENV=true pip3 install -U pip setuptools wheel
+}
+
+function pytest() { ## Takes Arguments. Run test suite with pytest.
+    python3 -m pytest tests/ "${@}"
+}
+
+function pytest:cov() { ## Takes arguments. Get test coverage with pytest-cov.
+    python3 -m pytest --cov test/ --cov-report term-missing "${@}"
+}
+
+function tox() { ## Run tox.
+    tox
+}
+
+function venv:init() { ## makes a venv in the project directory.
+    python${PYTHON_VENV_VERSION} -m venv ./.venv
+}
+
+function venv:init:all() { ## Initialize a venv, upgrade pip, wheel, and setuptools, and install both requirements files.
+    venv:init
+    source ./.venv/bin/activate
+    pip3:upgrade:pip
+    pip3:install:req
+}
+
+function venv:remove() { ## Delete the project venv.
+    printf "\nDeleting ./.venv deactivate any terminal windows that were using that venv.\n"
+    deactivate || true
+    rm -r ./.venv/ || true
+}
+
+function venv:reset() { ## Remove and reinstall a venv including both requirements files.
+    venv:remove
+    venv:init:all
+}
+
+function _help() {
+    python3 - << EOF
+from pathlib import Path
+from operator import itemgetter
+import re
+script_path = Path("$SCRIPT_PATH")
+with open(script_path) as file:
+    functions = []
+    for line in file:
+        match = re.match(r'^function\s*([a-zA-Z0-9\:-]*)\(\)\s*{\s*##\s*(.*)', line)
+        if match is not None:
+            functions.append(match.groups())
+    for target, help in sorted(functions):
+        print("  {0:20}    {1}".format(target,help))
+EOF
+}
+
+function _pip3() { ## Private function used as the base for most pip calls.
+    printf "\nUsing virtual env located at:\n%s\n" "$VIRTUAL_ENV"
+    PIP_REQUIRE_VIRTUALENV=true pip3 "${@}"
+}
+
+function _help:old(){
     printf "%s <task> [args]\n\nTasks:\n" "${0}"
 
     compgen -A function | grep -v "^_" | cat -n
@@ -254,5 +244,6 @@ function help() {
 }
 
 # This idea is heavily inspired by: https://github.com/adriancooney/Taskfile
+# Runs the help function if no arguments given to script.
 TIMEFORMAT=$'\nTask completed in %3lR'
 time "${@:-help}"
