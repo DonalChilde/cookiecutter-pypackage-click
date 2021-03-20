@@ -2,34 +2,44 @@
 Cookiecutter PyPackage
 ======================
 
-.. image:: https://pyup.io/repos/github/audreyfeldroy/cookiecutter-pypackage/shield.svg
-    :target: https://pyup.io/repos/github/audreyfeldroy/cookiecutter-pypackage/
-    :alt: Updates
+From: https://github.com/audreyfeldroy/cookiecutter-pypackage/
 
-.. image:: https://travis-ci.org/audreyfeldroy/cookiecutter-pypackage.svg?branch=master
-    :target: https://travis-ci.org/github/audreyfeldroy/cookiecutter-pypackage
-    :alt: Build Status
+TODO:
+* Make better project specific readme.
+* fix setup.cfg and setup.py for cookiecutter.
+* Get badges, they don't stink.
+* fix tests for cookiecutter.
+* make a better click example, sdtin/out pipeable?
+* show optional click setups.
+* update tox.ini
 
-.. image:: https://readthedocs.org/projects/cookiecutter-pypackage/badge/?version=latest
-    :target: https://cookiecutter-pypackage.readthedocs.io/en/latest/?badge=latest
-    :alt: Documentation Status
+.. .. image:: https://pyup.io/repos/github/audreyfeldroy/cookiecutter-pypackage/shield.svg
+..     :target: https://pyup.io/repos/github/audreyfeldroy/cookiecutter-pypackage/
+..     :alt: Updates
+
+.. .. image:: https://travis-ci.org/audreyfeldroy/cookiecutter-pypackage.svg?branch=master
+..     :target: https://travis-ci.org/github/audreyfeldroy/cookiecutter-pypackage
+..     :alt: Build Status
+
+.. .. image:: https://readthedocs.org/projects/cookiecutter-pypackage/badge/?version=latest
+..     :target: https://cookiecutter-pypackage.readthedocs.io/en/latest/?badge=latest
+..     :alt: Documentation Status
 
 Cookiecutter_ template for a Python package.
 
-* GitHub repo: https://github.com/audreyfeldroy/cookiecutter-pypackage/
+* GitHub repo: https://github.com/donalchilde/cookiecutter-pypackage-click/
 * Documentation: https://cookiecutter-pypackage.readthedocs.io/
 * Free software: BSD license
 
 Features
 --------
 
-* Testing setup with ``unittest`` and ``python setup.py test`` or ``pytest``
+* Testing setup with ``pytest``
 * Travis-CI_: Ready for Travis Continuous Integration testing
-* Tox_ testing: Setup to easily test for Python 3.5, 3.6, 3.7, 3.8
+* Tox_ testing: Setup to easily test for Python 3.8, 3.9
 * Sphinx_ docs: Documentation ready for generation with, for example, `Read the Docs`_
-* bump2version_: Pre-configured version bumping with a single command
 * Auto-release to PyPI_ when you push a new tag to master (optional)
-* Command line interface using Click (optional)
+* Command line interface using Click
 
 .. _Cookiecutter: https://github.com/cookiecutter/cookiecutter
 
@@ -38,15 +48,15 @@ Build Status
 
 Linux:
 
-.. image:: https://img.shields.io/travis/audreyfeldroy/cookiecutter-pypackage.svg
-    :target: https://travis-ci.org/audreyfeldroy/cookiecutter-pypackage
-    :alt: Linux build status on Travis CI
+.. .. image:: https://img.shields.io/travis/audreyfeldroy/cookiecutter-pypackage.svg
+..     :target: https://travis-ci.org/audreyfeldroy/cookiecutter-pypackage
+..     :alt: Linux build status on Travis CI
 
 Windows:
 
-.. image:: https://ci.appveyor.com/api/projects/status/github/audreyr/cookiecutter-pypackage?branch=master&svg=true
-    :target: https://ci.appveyor.com/project/audreyr/cookiecutter-pypackage/branch/master
-    :alt: Windows build status on Appveyor
+.. .. image:: https://ci.appveyor.com/api/projects/status/github/audreyr/cookiecutter-pypackage?branch=master&svg=true
+..     :target: https://ci.appveyor.com/project/audreyr/cookiecutter-pypackage/branch/master
+..     :alt: Windows build status on Appveyor
 
 Quickstart
 ----------
@@ -58,7 +68,7 @@ Cookiecutter 1.4.0 or higher)::
 
 Generate a Python package project::
 
-    cookiecutter https://github.com/audreyfeldroy/cookiecutter-pypackage.git
+    cookiecutter https://github.com/donalchilde/cookiecutter-pypackage-click.git
 
 Then:
 
@@ -121,11 +131,11 @@ be a fork.
 * It's up to you whether or not to rename your fork/own version. Do whatever
   you think sounds good.
 
-Or Submit a Pull Request
-~~~~~~~~~~~~~~~~~~~~~~~~
+.. Or Submit a Pull Request
+.. ~~~~~~~~~~~~~~~~~~~~~~~~
 
-I also accept pull requests on this, if they're small, atomic, and if they
-make my own packaging experience better.
+.. I also accept pull requests on this, if they're small, atomic, and if they
+.. make my own packaging experience better.
 
 
 .. _Travis-CI: http://travis-ci.org/
