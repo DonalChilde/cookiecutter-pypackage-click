@@ -5,6 +5,7 @@ Cookiecutter PyPackage
 From: https://github.com/audreyfeldroy/cookiecutter-pypackage/
 
 TODO:
+
 * Make better project specific readme.
 * fix setup.cfg and setup.py for cookiecutter.
 * Get badges, they don't stink.
