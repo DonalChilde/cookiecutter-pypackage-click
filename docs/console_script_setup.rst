@@ -2,7 +2,7 @@
 
 
 Console Script Setup
-=================
+====================
 
 Optionally, your package can include a console script using Click or argparse (Python 3.2+).
 
@@ -25,8 +25,10 @@ To use the console script in development:
 
 The script will be generated with output for no arguments and --help.
 
---help
-    show help menu and exit
+.. code-block:: bash
+
+    --help
+        show help menu and exit
 
 Known Issues
 ------------

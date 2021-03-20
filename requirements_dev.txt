@@ -7,3 +7,9 @@ isort
 pylint
 mypy
 pre-commit
+sphinx
+sphinx-autobuild
+sphinx_rtd_theme
+snooty-lextudio
+rst2html
+rstcheck
