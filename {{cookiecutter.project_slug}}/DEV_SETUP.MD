@@ -1,13 +1,21 @@
-# Fix this
+# Initial Project Setup
 
-## pre-commit
+From the project directory, run
 
 ```bash
-# To get a sample .pre-commit-config.yaml
-pre-commit sample-config
-# To set up the git hook scripts run
-pre-commit install
-# when adding new hooks:
-# WARNING - not sure if there is a --check flag, may change files.
-pre-commit run --all-files
+./project.sh venv:init:all
+./project.sh git:init
+# To set a github remote origin...
+# https://docs.github.com/en/github/using-git/adding-a-remote
+git remote add origin https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}.git
 ```
+
+## Downloading project from github
+
+From the parent directory of the project -
+
+```bash
+git clone git@github.com:{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}.git
+```
+
+TODO project setup from github
