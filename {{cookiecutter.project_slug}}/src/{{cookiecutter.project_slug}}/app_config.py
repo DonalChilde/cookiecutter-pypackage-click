@@ -24,9 +24,11 @@ APP_DIR = os.getenv(
 """The app data directory. Location is system dependent."""
 
 
-LOG_LEVEL = os.getenv(
-    "{{ cookiecutter.namespace_slug }}{{ cookiecutter.project_slug }}_LOG_LEVEL",
-    str(logging.WARNING),
+LOG_LEVEL = int(
+    os.getenv(
+        "{{ cookiecutter.namespace_slug }}{{ cookiecutter.project_slug }}_LOG_LEVEL",
+        str(logging.WARNING),
+    )
 )
 """App wide setting for log level"""
 
@@ -34,7 +36,7 @@ LOG_LEVEL = os.getenv(
 # TESTING = os.getenv("PFMSOFT_eve_esi_jobs_TESTING", "False")
 # """"""
 def _logger(
-    log_path_parent: Path, name: str, log_level: Union[str, int]
+    log_path_parent: str, name: str, log_level: Union[str, int]
 ) -> logging.Logger:
     """A central logger that will log to file."""
     # log_level = logging.DEBUG
