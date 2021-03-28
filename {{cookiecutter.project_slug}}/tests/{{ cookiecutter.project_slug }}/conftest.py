@@ -11,11 +11,11 @@ APP_LOG_LEVEL = logging.INFO
 
 
 @pytest.fixture(scope="session", name="logger")
-def logger_(test_log_path):
+def _logger(test_log_path):
     """A central logger that will log to file."""
     log_level = logging.DEBUG
     log_file_name = f"{__name__}.log"
-    _logger = logging.getLogger(__name__)
+    logger = logging.getLogger(__name__)
     log_path: Path = test_log_path / Path("test-logs")
     log_path.mkdir(parents=True, exist_ok=True)
     file_handler = RotatingFileHandler(
@@ -27,15 +27,15 @@ def logger_(test_log_path):
     )
     file_handler.setFormatter(logging.Formatter(format_string))
     file_handler.setLevel(log_level)
-    _logger.addHandler(file_handler)
+    logger.addHandler(file_handler)
     # _logger.addHandler(RichHandler()
-    _logger.setLevel(log_level)
+    logger.setLevel(log_level)
     ############################################################
     # NOTE add file handler to other library modules as needed #
     ############################################################
     # async_logger = logging.getLogger("eve_esi_jobs")
     # async_logger.addHandler(file_handler)
-    return _logger
+    return logger
 
 
 @pytest.fixture(scope="session", name="test_log_path")
@@ -76,10 +76,15 @@ def example_resource(logger: logging.Logger) -> dict:
 @pytest.fixture(autouse=True)
 def env_setup(monkeypatch, test_app_dir):
     """environment variables set for each test."""
-    monkeypatch.setenv("PFMSOFT_{{ cookiecutter.project_slug }}_TESTING", "True")
     monkeypatch.setenv(
-        "PFMSOFT_{{ cookiecutter.project_slug }}_LOG_LEVEL", str(APP_LOG_LEVEL)
+        "{{ cookiecutter.namespace_slug }}{{ cookiecutter.project_slug }}_TESTING",
+        "True",
     )
     monkeypatch.setenv(
-        "PFMSOFT_{{ cookiecutter.project_slug }}_APP_DIR", str(test_app_dir)
+        "{{ cookiecutter.namespace_slug }}{{ cookiecutter.project_slug }}_LOG_LEVEL",
+        str(APP_LOG_LEVEL),
+    )
+    monkeypatch.setenv(
+        "{{ cookiecutter.namespace_slug }}{{ cookiecutter.project_slug }}_APP_DIR",
+        str(test_app_dir),
     )
