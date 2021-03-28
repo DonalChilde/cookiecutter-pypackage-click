@@ -1,10 +1,11 @@
-"""Console script for {{cookiecutter.project_slug}}."""
+"""Console script entry point for {{cookiecutter.project_slug}}."""
 
 import sys
 import click
+from {{cookiecutter.project_slug}}.cli.example import hello
 
 
-@click.command()
+@click.group()
 def main(args=None):
     """Console script for {{cookiecutter.project_slug}}."""
     click.echo(
@@ -16,5 +17,4 @@ def main(args=None):
     return 0
 
 
-if __name__ == "__main__":
-    sys.exit(main())  # pragma: no cover
+main.add_command(hello)
