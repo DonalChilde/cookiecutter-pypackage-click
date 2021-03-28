@@ -2,12 +2,15 @@
 
 import sys
 import click
+
 from {{cookiecutter.project_slug}}.cli.example import hello
 
 
 @click.group()
-def main(args=None):
+@click.pass_context
+def main(ctx: click.Context, args=None):
     """Console script for {{cookiecutter.project_slug}}."""
+    ctx.obj["important_value"] = {"key": "oh so important"}
     click.echo(
         "Replace this message by putting your code into "
         "{{cookiecutter.project_slug}}.cli.main"
