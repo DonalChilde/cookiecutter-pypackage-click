@@ -5,6 +5,7 @@ wheel
 tox
 coverage
 Sphinx
+sphinx-autobuild
 sphinx-autodoc-typehints
 sphinx_rtd_theme
 snooty-lextudio

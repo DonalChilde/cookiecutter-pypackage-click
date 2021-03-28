@@ -1,11 +1,13 @@
-======================
-Cookiecutter PyPackage
-======================
+============================
+Cookiecutter PyPackage Click
+============================
 
-From: https://github.com/audreyfeldroy/cookiecutter-pypackage/
+    Derived from: https://github.com/audreyfeldroy/cookiecutter-pypackage/
 
 TODO:
 
+* Fix isort and black in generated files.
+* Fix pylint errors in generated files.
 * Make better project specific readme.
 * fix setup.cfg and setup.py for cookiecutter.
 * Get badges, they don't stink.
