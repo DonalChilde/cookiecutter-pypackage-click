@@ -3,7 +3,7 @@
 # Master copy located at ?
 # Version 1.0
 # 2021-03-15T16:27:09Z
-# Note: this script expects to live in the top directory of a project.
+# Note: this script expects to be run from the top directory of a project.
 
 # Ideas shamelessly lifted from:
 # https://github.com/nickjj/docker-flask-example/blob/main/run
