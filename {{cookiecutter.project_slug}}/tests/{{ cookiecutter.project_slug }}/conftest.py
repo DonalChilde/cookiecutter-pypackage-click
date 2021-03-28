@@ -74,7 +74,7 @@ def example_resource(logger: logging.Logger) -> dict:
 
 
 @pytest.fixture(autouse=True)
-def env_setup(monkeypatch, test_app_dir):
+def env_setup(monkeypatch, test_app_data_dir):
     """environment variables set for each test."""
     monkeypatch.setenv(
         "{{ cookiecutter.namespace_slug }}{{ cookiecutter.project_slug }}_TESTING",
@@ -86,5 +86,5 @@ def env_setup(monkeypatch, test_app_dir):
     )
     monkeypatch.setenv(
         "{{ cookiecutter.namespace_slug }}{{ cookiecutter.project_slug }}_APP_DIR",
-        str(test_app_dir),
+        str(test_app_data_dir),
     )
