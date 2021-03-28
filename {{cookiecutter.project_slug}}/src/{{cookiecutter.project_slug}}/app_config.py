@@ -6,6 +6,7 @@ import logging
 import os
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
+from typing import Union
 
 import click
 
@@ -32,12 +33,14 @@ LOG_LEVEL = os.getenv(
 
 # TESTING = os.getenv("PFMSOFT_eve_esi_jobs_TESTING", "False")
 # """"""
-def _logger(log_path: Path, name: str, log_level: int) -> logging.Logger:
+def _logger(
+    log_path_parent: Path, name: str, log_level: Union[str, int]
+) -> logging.Logger:
     """A central logger that will log to file."""
     # log_level = logging.DEBUG
     log_file_name = f"{name}.log"
     logger_ = logging.getLogger(name)
-    log_path: Path = log_path / Path("logs")
+    log_path: Path = log_path_parent / Path("logs")
     log_path.mkdir(parents=True, exist_ok=True)
     file_handler = RotatingFileHandler(
         log_path / Path(log_file_name), maxBytes=102400, backupCount=10
@@ -56,6 +59,7 @@ def _logger(log_path: Path, name: str, log_level: int) -> logging.Logger:
     ############################################################
     # async_logger = logging.getLogger("eve_esi_jobs")
     # async_logger.addHandler(file_handler)
+    logger_.info("Logger initializd at %s", log_path)
     return logger_
 
 
