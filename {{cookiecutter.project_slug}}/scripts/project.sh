@@ -67,9 +67,10 @@ function dist:release() { ## package and upload a release.
 }
 
 function docs:build() { ## Build documentation.
-    rm -f docs/$PACKAGE.rst
-	rm -f docs/modules.rst
-	sphinx-apidoc -o ./docs/ ./src/$PACKAGE
+    # sphinx-apidoc makes an ugly format, see the Rich docs for a better manual example.
+    # rm -f docs/$PACKAGE.rst
+	# rm -f docs/modules.rst
+	# sphinx-apidoc -o ./docs/ ./src/$PACKAGE
     sphinx-build -b html ./docs ./docs/_build
 }
 
@@ -179,12 +180,16 @@ function pip3:upgrade:pip() { ## Upgrade pip, wheel, setuptools.
     PIP_REQUIRE_VIRTUALENV=true pip3 install -U pip setuptools wheel
 }
 
+function _pytest() {
+    python3 -m pytest "${@}"
+}
+
 function pytest() { ## Takes Arguments. Run test suite with pytest.
-    python3 -m pytest tests/ "${@}"
+    _pytest tests/ "${@}"
 }
 
 function pytest:cov() { ## Takes arguments. Get test coverage with pytest-cov.
-    python3 -m pytest --cov test/ --cov-report term-missing "${@}"
+    _pytest tests/ --cov src/ --cov-report term-missing "${@}"
 }
 
 function tox() { ## Run tox.
