@@ -3,8 +3,8 @@
 From the project directory, run
 
 ```bash
-./project.sh venv:init:all
-./project.sh git:init
+./scripts/run.sh venv:init:all
+./scripts/run.sh git:init
 # To set a github remote origin...
 # https://docs.github.com/en/github/using-git/adding-a-remote
 git remote add origin https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}.git

@@ -1,68 +1,85 @@
 """App config values
 
-TODO support a more complex logger, with log to file
+
 """
 import logging
 import os
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
-from typing import Union
+from typing import Union, Optional
 
 import click
 
-APP_NAME = os.getenv(
-    "{{ cookiecutter.namespace_slug }}{{ cookiecutter.project_slug }}_APP_NAME",
-    "{{ cookiecutter.project_name.replace(' ','-') }}",
-)
-"""The name of the app. Should be namespaced to prevent collision."""
+NAMESPACE = "{{ cookiecutter.namespace_slug }}"
+PROJECT_SLUG = "{{ cookiecutter.project_slug }}"
+PROJECT_NAME = "{{ cookiecutter.project_name.replace(' ','-') }}"
 
 
-APP_DIR = os.getenv(
-    "{{ cookiecutter.namespace_slug }}{{ cookiecutter.project_slug }}_APP_DIR",
-    click.get_app_dir(APP_NAME, force_posix=True),
-)
-"""The app data directory. Location is system dependent."""
+class App_Config:
+    """Store App configuration values here.
 
+    Loads env variables, with usable defaults.
+    If used, set env variables - maybe using dotenv - before
+    instancing App_Config.
+    """
 
-LOG_LEVEL = int(
-    os.getenv(
-        "{{ cookiecutter.namespace_slug }}{{ cookiecutter.project_slug }}_LOG_LEVEL",
-        str(logging.WARNING),
+    APP_NAME = os.getenv(
+        f"{NAMESPACE}{PROJECT_SLUG}_APP_NAME",
+        f"{ PROJECT_NAME.replace(' ','-') }",
     )
-)
-"""App wide setting for log level"""
+    """The name of the app. Should be namespaced to prevent collision."""
+
+    APP_DIR = os.getenv(
+        f"{NAMESPACE}{PROJECT_SLUG}_APP_DIR",
+        click.get_app_dir(APP_NAME, force_posix=True),
+    )
+    """The app data directory. Location is system dependent."""
+
+    LOG_LEVEL = int(
+        os.getenv(
+            f"{NAMESPACE}{PROJECT_SLUG}_LOG_LEVEL",
+            str(logging.WARNING),
+        )
+    )
+    """App wide setting for log level"""
+    LOG_DIR = os.getenv(
+        f"{NAMESPACE}{PROJECT_SLUG}_LOG_PATH", str(Path("{APP_DIR}") / "logs")
+    )
 
 
-# TESTING = os.getenv("PFMSOFT_eve_esi_jobs_TESTING", "False")
-# """"""
-def _logger(
-    log_path_parent: str, name: str, log_level: Union[str, int]
+def log_file_handler(
+    file_path: Path,
+    log_level: int = logging.WARNING,
+    format_string: Optional[str] = None,
+):
+    handler = RotatingFileHandler(file_path, maxBytes=102400, backupCount=10)
+    if format_string is None:
+        format_string = (
+            "%(asctime)s %(levelname)s:%(funcName)s: "
+            "%(message)s [in %(pathname)s:%(lineno)d]"
+        )
+    handler.setFormatter(logging.Formatter(format_string))
+    handler.setLevel(log_level)
+    return handler
+
+
+def file_logger(
+    log_dir: str, logger_name: str, log_level: Union[str, int]
 ) -> logging.Logger:
-    """A central logger that will log to file."""
-    # log_level = logging.DEBUG
-    log_file_name = f"{name}.log"
-    logger_ = logging.getLogger(name)
-    log_path: Path = log_path_parent / Path("logs")
-    log_path.mkdir(parents=True, exist_ok=True)
-    file_handler = RotatingFileHandler(
-        log_path / Path(log_file_name), maxBytes=102400, backupCount=10
-    )
-    format_string = (
-        "%(asctime)s %(levelname)s:%(funcName)s: "
-        "%(message)s [in %(pathname)s:%(lineno)d]"
-    )
-    file_handler.setFormatter(logging.Formatter(format_string))
-    file_handler.setLevel(log_level)
-    logger_.addHandler(file_handler)
-    # _logger.addHandler(RichHandler()
+    """Configure a logger with a RotatingFileHandler."""
+    log_file_name = f"{logger_name}.log"
+    logger_ = logging.getLogger(logger_name)
+    log_dir_path: Path = Path(log_dir)
+    log_dir_path.mkdir(parents=True, exist_ok=True)
+    log_file_path = log_dir_path / Path(log_file_name)
+    handler = log_file_handler(log_file_path, log_level=log_level)
+    logger_.addHandler(handler)
     logger_.setLevel(log_level)
     ############################################################
     # NOTE add file handler to other library modules as needed #
     ############################################################
     # async_logger = logging.getLogger("eve_esi_jobs")
     # async_logger.addHandler(file_handler)
-    logger_.info("Logger initializd at %s", log_path)
+    # async_logger.setLevel(log_level)
+    logger_.info("Rotating File Logger initializd at %s", log_file_path)
     return logger_
-
-
-LOGGER = _logger(APP_DIR, APP_NAME, LOG_LEVEL)

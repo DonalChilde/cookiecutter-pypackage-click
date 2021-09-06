@@ -45,6 +45,12 @@ extensions = [
     "sphinx.ext.intersphinx",
 ]
 
+# Mapping Example
+# intersphinx_mapping = {
+#     "python": ("https://docs.python.org/3", None),
+#     "aiohttp_queue": ("https://pfmsoft-aiohttp-queue.readthedocs.io/en/latest/", None),
+# }
+
 intersphinx_mapping = {"python": ("https://docs.python.org/3", None)}
 
 # Add any paths that contain templates here, relative to this directory.
@@ -80,7 +86,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 pygments_style = 'sphinx'
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
-todo_include_todos = False
+todo_include_todos = True
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -103,7 +109,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ---------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = '{{ cookiecutter.project_slug }}doc'
+htmlhelp_basename = '{{ cookiecutter.project_slug }}_doc'
 
 
 # -- Options for LaTeX output ------------------------------------------
