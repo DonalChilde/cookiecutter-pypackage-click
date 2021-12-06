@@ -4,7 +4,7 @@
 
 from click.testing import CliRunner
 
-from {{cookiecutter.project_slug}}.cli import  {{ cookiecutter.project_slug }}_cli as cli
+from {{cookiecutter.project_slug}}.cli import  main_cli as cli
 
 
 def test_content(response):
