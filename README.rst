@@ -63,13 +63,23 @@ Quickstart
 ----------
 
 Install the latest Cookiecutter if you haven't installed it yet (this requires
-Cookiecutter 1.4.0 or higher)::
+Cookiecutter 1.4.0 or higher)
+
+.. code-block:: bash
 
     pip install -U cookiecutter
 
-Generate a Python package project::
+Generate a Python package project
+
+.. code-block:: bash
 
     cookiecutter https://github.com/donalchilde/cookiecutter-pypackage-click.git
+
+    #With a specific output directory
+    cookiecutter -o ~/projects/tmp/ https://github.com/donalchilde/cookiecutter-pypackage-click.git
+
+    #With a specific output directory and default values from cookiecutter.json
+    cookiecutter --no-input -o ~/projects/tmp/ https://github.com/donalchilde/cookiecutter-pypackage-click.git
 
 Then:
 

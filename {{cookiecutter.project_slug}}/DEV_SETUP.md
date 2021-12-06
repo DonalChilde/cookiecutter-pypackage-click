@@ -3,7 +3,11 @@
 From the project directory, run
 
 ```bash
+# Make a virtualenv in the project directory, and install requirements.
 ./scripts/run.sh venv:init:all
+# Activate the virtualenv
+source ./.venv/bin/activate
+# Make a local git repo
 ./scripts/run.sh git:init
 # To set a github remote origin...
 # https://docs.github.com/en/github/using-git/adding-a-remote
