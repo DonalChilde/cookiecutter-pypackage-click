@@ -90,77 +90,134 @@ def test_app_data_dir_(tmp_path_factory):
     return test_app_data_dir
 
 
-@pytest.fixture(scope="session")
-def example_resource(logger: logging.Logger) -> dict:
-    """Load a resource file from a package directory.
+# @pytest.fixture(scope="session")
+# def example_resource(logger: logging.Logger) -> dict:
+#     """Load a resource file from a package directory.
 
-    An example of loading a single resource file.
-    """
-    try:
-        resource_path: str = "tests.{{ cookiecutter.project_slug }}.resources"
-        resource_name: str = "example.json"
-        with resources.open_text(resource_path, resource_name) as data_file:
-            data = json.load(data_file)
-            logger.info("Loaded resource file %s from %s", resource_name, resource_path)
-            return data
-    except Exception as ex:
-        logger.exception(
-            "Unable to load resource file %s from %s Error msg %s",
-            resource_name,
-            resource_path,
-            ex,
-        )
-        raise ex
+#     An example of loading a single resource file.
+#     """
+#     try:
+#         resource_path: str = "tests.{{ cookiecutter.project_slug }}.resources"
+#         resource_name: str = "example.json"
+#         with resources.open_text(resource_path, resource_name) as data_file:
+#             data = json.load(data_file)
+#             logger.info("Loaded resource file %s from %s", resource_name, resource_path)
+#             return data
+#     except Exception as ex:
+#         logger.exception(
+#             "Unable to load resource file %s from %s Error msg %s",
+#             resource_name,
+#             resource_path,
+#             ex,
+#         )
+#         raise ex
 
 
 @pytest.fixture(scope="session", name="json_resources")
-def json_resources_() -> Dict[str, FileResource]:
+def json_resources_example_(logger: logging.Logger) -> Dict[str, FileResource]:
     """
-    Load all resource files in a directory to a dict indexed by file name.
+    Load all json resource files in a directory to a dict indexed by file name.
 
     Excludes __init__.py
     """
+    json_resources = {}
     resource_path: str = "tests.{{ cookiecutter.project_slug }}.json_resources"
-    sample_data = make_file_resources_from_resource_path(resource_path)
-    return sample_data
+    resource_names = collect_resource_names(resource_path, [".json"])
+    for name in resource_names:
+        resource = load_json_resource(resource_path, name, logger)
+        json_resources[name] = resource
+    return json_resources
 
 
-def make_file_resources_from_resource_path(
-    resource_path, exclude_suffixes: Optional[List[str]] = None
-):
-    file_paths = collect_resource_paths(resource_path, exclude_suffixes)
+def load_json_resource(
+    resource_path: str, resource_name: str, logger: logging.Logger
+) -> FileResource:
+    resource = load_file_resource(resource_path, resource_name, logger)
+    resource.data = json.loads(resource.data)
+    return resource
+
+
+def load_file_resources(
+    resource_path: str,
+    resource_names: List[str],
+    logger: logging.Logger,
+    include_suffixes: Optional[List[str]] = None,
+    path_only: bool = False,
+    read_text: bool = True,
+) -> Dict[str, FileResource]:
+    """
+    Load all the files found at a resource location.
+
+    [extended_summary]
+
+    Args:
+        resource_path: package path to resource folder, eg. tests.resources.photos
+        resource_names: A list of resources to load. An empty list means load all files found.
+        logger: logger, usually passed in from a pytest.fixture
+        exclude_suffixes: A list of string suffixes to exclude. eg. [".txt",".png"]. Defaults to None.
+        path_only: Do not read the file. Defaults to False.
+        read_text: Read file as text. Defaults to True.
+
+    Returns:
+        A dict of file resources
+    """
+    if not resource_names:
+        file_names = collect_resource_names(resource_path, include_suffixes)
+    else:
+        file_name = resource_names
     file_resources = {}
-    for file_path in file_paths:
-        data = file_path.read_text()
-        file_resource = FileResource(file_path=file_path, data=data)
-        file_resources[file_path.name] = file_resource
-    assert "__init__.py" not in file_resources
+    for file_name in file_names:
+        file_resource = load_file_resource(
+            resource_path, file_name, logger, path_only, read_text
+        )
+        file_resources[file_name] = file_resource
     return file_resources
 
 
-def collect_resource_paths(
+def load_file_resource(
     resource_path: str,
-    exclude_suffixes: Optional[List[str]] = None,
-) -> List[Path]:
-    """Returns a list of Paths in a resource directory, excluding the __init__.py"""
-    if exclude_suffixes is None:
-        exclude_suffixes = []
-    result = []
-    with resources.path(resource_path, "__init__.py") as data_path:
-        for file in data_path.parent.glob("*.*"):
-            if file.name != "__init__.py" and file.suffix not in exclude_suffixes:
-                result.append(file)
-    return result
+    resource_name: str,
+    logger: logging.Logger,
+    path_only: bool = False,
+    read_text: bool = True,
+) -> FileResource:
+    """
+    Load a file resource.
 
+    Load a string or bytes as a FileResource. Can optionaly return only a path to a
+    file, with None as data.
 
-def make_file_resource(resource_path, resource_name, logger) -> FileResource:
+    Args:
+        resource_path: package path to resource folder, eg. tests.resources.photos
+        resource_name: file name of resource, eg. beach.jpeg
+        logger: logger, usually passed in from a pytest.fixture
+        path_only: Do not read the file. Defaults to False.
+        read_text: Read file as text. Defaults to True.
+
+    Raises:
+        ex: [description]
+
+    Returns:
+        FileResource: [description]
+    """
     try:
         with resources.path(resource_path, resource_name) as data_path:
-            data = data_path.read_text()
-            logger.debug(
-                "Loaded resource file %s from %s", resource_name, resource_path
-            )
-            return FileResource(file_path=data_path, data=data)
+            data: Optional[Union[str, bytes]] = None
+            if read_text:
+                if not path_only:
+                    data = data_path.read_text()
+                    logger.debug(
+                        "Loaded resource file %s from %s", resource_name, resource_path
+                    )
+                return FileResource(file_path=data_path, data=data)
+            else:
+                if not path_only:
+                    data = data_path.read_bytes()
+                    logger.debug(
+                        "Loaded resource file %s from %s", resource_name, resource_path
+                    )
+                return FileResource(file_path=data_path, data=data)
+    # TODO refine the exception handling for files, and resource loading.
     except Exception as ex:
         logger.exception(
             "Unable to load resource file %s from %s Error msg %s",
@@ -169,6 +226,52 @@ def make_file_resource(resource_path, resource_name, logger) -> FileResource:
             ex,
         )
         raise ex
+
+
+def collect_resource_names(
+    resource_path: str,
+    include_suffixes: Optional[List[str]] = None,
+) -> List[Path]:
+    """
+    Returns a list of file names in a resource directory, excluding the __init__.py
+
+    [extended_summary]
+
+    Args:
+        resource_path: package path to resource folder, eg. tests.resources.photos
+        include_suffixes: A list of string suffixes to include. eg. [".txt",".png"]. Defaults to None.
+
+    Returns:
+        A list of file names in a resource directory.
+    """
+
+    if include_suffixes is None:
+        include_suffixes = []
+    result = []
+    with resources.path(resource_path, "__init__.py") as data_path:
+        for file in (x for x in data_path.parent.glob("*.*") if x.is_file()):
+            if file.name != "__init__.py":
+                if not include_suffixes or file.suffix in include_suffixes:
+                    result.append(file.name)
+    return result
+
+
+# def make_file_resource(resource_path, resource_name, logger) -> FileResource:
+#     try:
+#         with resources.path(resource_path, resource_name) as data_path:
+#             data = data_path.read_text()
+#             logger.debug(
+#                 "Loaded resource file %s from %s", resource_name, resource_path
+#             )
+#             return FileResource(file_path=data_path, data=data)
+#     except Exception as ex:
+#         logger.exception(
+#             "Unable to load resource file %s from %s Error msg %s",
+#             resource_name,
+#             resource_path,
+#             ex,
+#         )
+#         raise ex
 
 
 @pytest.fixture(autouse=True)
