@@ -3,8 +3,10 @@ from typing import Optional
 
 import click
 
-
+# FIXME remove after dev
 from ..app_lib import file_hash
+
+# from {{cookiecutter.project_slug}}.app_lib import file_hash
 
 
 @click.group(name="hasher")
@@ -29,7 +31,8 @@ def validate_(
     string: Optional[str] = None,
 ):
     # Check a file or string against a given digest and hash method.
-    click.echo(ctx)
+    click.echo(str(ctx.params))
+    click.echo(ctx.obj)
 
 
 @click.command(name="hash")
@@ -49,4 +52,9 @@ def hash_(
     # get hasher
     # calculate hash
     # display digest
-    click.echo(ctx)
+    click.echo(str(ctx.params))
+    click.echo(ctx.obj)
+
+
+hasher_.add_command(validate_)
+hasher_.add_command(hash_)
