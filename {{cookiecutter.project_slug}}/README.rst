@@ -34,6 +34,8 @@ Features
 
 * TODO
 
+.. include:: ./CHANGELOG.rst
+
 Credits
 -------
 

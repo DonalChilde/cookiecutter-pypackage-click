@@ -96,7 +96,15 @@ function dist:release() { ## Upload a release to PyPi.
 }
 
 function dist:test:release() { ## Upload a release to TestPyPi.
-    echo "Uploading to TestPyPi"
+    echo "Preparing to upload to TestPyPi"
+    echo "Did you:"
+    echo "\t- Check for the correct branch?"
+    echo "\t- Update the version number?"
+    echo "\t- Update the documentation?"
+    echo "\t- Run ALL THE TESTS?"
+    echo "\t- Update the changelog?"
+    echo "\t- Build a fresh dist/?"
+    echo
     echo "Take ten seconds to be sure:"
     _countdown 10
     # https://stackoverflow.com/a/1885534/105844

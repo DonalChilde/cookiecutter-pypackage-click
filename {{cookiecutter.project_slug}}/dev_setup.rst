@@ -20,6 +20,7 @@ From the project directory, run
     # install an editable link to source
     pip install -e .
 
+
 Downloading project from github
 -------------------------------
 
@@ -40,6 +41,7 @@ TODO List code modules and doc files to be removed.
 Tips and fixes
 --------------
 
+
 Git
 ^^^
 To run git commit without git precommit hooks -
@@ -49,9 +51,11 @@ To run git commit without git precommit hooks -
 
 Docs
 ^^^^
+Generate docs with:
+.. code-block:: bash
+    ./scripts/run.sh docs:build
 Normally, there are no `heading levels`_ assigned to certain characters as the structure is determined from the succession of headings. However, it is better to stick to the same convention throughout a project. For instance:
 .. _`heading levels`: https://thomas-cokelaer.info/tutorials/sphinx/rest_syntax.html#headings
-
    * # with overline, for parts
    * * with overline, for chapters
    * =, for sections

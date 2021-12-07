@@ -20,5 +20,6 @@
   "python.analysis.extraPaths": ["./src"],
 
   "restructuredtext.languageServer.disabled": false,
-  "liveServer.settings.port": 5501
+  "liveServer.settings.port": 5501,
+  "restructuredtext.confPath": ""
 }
