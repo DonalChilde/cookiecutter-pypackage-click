@@ -17,6 +17,8 @@ From the project directory, run
     # To set a github remote origin...
     # https://docs.github.com/en/github/using-git/adding-a-remote
     git remote add origin https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}.git
+    # install an editable link to source
+    pip install -e .
 
 Downloading project from github
 -------------------------------
