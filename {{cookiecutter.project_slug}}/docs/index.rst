@@ -12,6 +12,7 @@ Welcome to {{ cookiecutter.project_name }}'s documentation!
    contributing
    {% if cookiecutter.create_author_file == 'y' -%}authors
    {% endif -%}changelog
+   dev_instructions
 
 Indices and tables
 ==================

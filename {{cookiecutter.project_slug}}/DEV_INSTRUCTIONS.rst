@@ -1,5 +1,5 @@
 =========
-Dev Setup
+Dev Instructions
 =========
 
 Initial Project Setup
