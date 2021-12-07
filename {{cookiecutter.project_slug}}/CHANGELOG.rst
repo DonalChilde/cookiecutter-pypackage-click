@@ -1,7 +1,7 @@
 =========
 Changelog
 =========
-{{ cookiecutter.project_slug }} - {{ cookiecutter.version }}
+{{ cookiecutter.project_name }} - {{ cookiecutter.version }}
 ------------------------------------------------------------------
 Generated at: ({% now 'utc' %})
 
@@ -9,41 +9,92 @@ Generated at: ({% now 'utc' %})
 
 
 [Unreleased] - Soon™
-------------
+-------------------------
+
 Release Notes
 ^^^^^^^^^^^^^
-Keep track of changes as they happen. For each release, change [Unreleased] to the version, eg. 0.0.1, and Soon™ to the ios date, eg. 1970-01-01
+Keep track of changes as they happen. For each release:
+
+* Change [Unreleased] to the version, eg. 0.0.1
+* Change Soon™ to the iso date, eg. 1970-01-01
+* `Changelogs are important`_
+
 Added
 ^^^^^
+
+* None
+
 Changed
 ^^^^^^^
+
+* None
+
 Deprecated
 ^^^^^^^^^^
+
+* None
+
 Removed
 ^^^^^^^
+
+* None
+
 Fixed
 ^^^^^
+
+* None
+
 Security
 ^^^^^^^^
 
+* None
 
-Keep this as a copy/paste template for future releases.
 
-[Unreleased] - Soon™
-------------
+
+
+[Template] - Soon™
+-------------------------
+
 Release Notes
 ^^^^^^^^^^^^^
-Keep track of changes as they happen. For each release, change [Unreleased] to the version, eg. 0.0.1, and Soon™ to the iso date, eg. 1970-01-01
-* https://keepachangelog.com/en/1.0.0/
+
+* Copy template to top of changelog.
+* Change [Template] to [Unreleased]
+* At release:
+
+  * Change [Unreleased] to the version, eg. 0.0.1
+  * Change Soon™ to the iso date, eg. 1970-01-01
+
+* `Changelogs are important`_
+
+.. _`Changelogs are important`: https://keepachangelog.com/en/1.0.0/
+
 Added
 ^^^^^
+
+* None
+
 Changed
 ^^^^^^^
+
+* None
+
 Deprecated
 ^^^^^^^^^^
+
+* None
+
 Removed
 ^^^^^^^
+
+* None
+
 Fixed
 ^^^^^
+
+* None
+
 Security
 ^^^^^^^^
+
+* None
