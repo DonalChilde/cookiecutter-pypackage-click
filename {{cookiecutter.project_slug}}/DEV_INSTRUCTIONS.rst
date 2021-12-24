@@ -15,7 +15,7 @@ From the project directory, run
     source ./.venv/bin/activate
     # Make a local git repo
     ./scripts/run.sh git:init
-    # Initial commit
+    # Initial commit. Repeat both commands if git hooks modify files.
     git add .
     git commit -m "initial commit"
     # To set a github remote origin...
