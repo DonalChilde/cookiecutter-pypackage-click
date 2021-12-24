@@ -1,6 +1,7 @@
+import hashlib
+from logging import Logger
 from pathlib import Path
 from typing import Optional
-from logging import Logger
 
 import click
 
@@ -8,15 +9,9 @@ import click
 from ..app_lib import file_hash
 from .cli_app import App
 
-# from {{cookiecutter.project_slug}}.app_lib import file_hash
+# from click_hash.app_lib import file_hash
 
 logger = logger = Logger(__name__)
-
-
-# @click.group(name="hasher")
-# @click.pass_context
-# def hasher_(ctx: click.Context):
-#     pass
 
 
 @click.command(name="validate")
@@ -56,6 +51,19 @@ def hash_(
     # get hasher
     # calculate hash
     # display digest
+    try:
+        hasher = hashlib.new(hash_name)
+        if file_path:
+            hash_hex = file_hash.calculate_file_hash_from_path(file_path, hasher)
+            click.echo(f"{file_path}\t{hash_hex}")
+        elif string:
+            hash_hex = file_hash.hash_a_string(string, hasher, as_hex_str=True)
+            click.echo(hash_hex)
+        else:
+            click.BadArgumentUsage("Needs a --file-path or a --string")
+    except ValueError as ex:
+        # TODO output valid hasher names
+        print(ex)
     click.echo(str(ctx.params))
     click.echo(ctx.obj)
 
