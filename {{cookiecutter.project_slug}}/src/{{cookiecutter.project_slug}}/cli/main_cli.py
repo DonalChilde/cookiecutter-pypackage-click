@@ -1,10 +1,11 @@
 """Console script entry point for {{cookiecutter.project_slug}}."""
 
+
 from logging import Logger
-import sys
+
 import click
 
-from ..cli.file_hash_cli import hasher_
+from ..cli.file_hash_cli import hash_, validate_
 from .cli_app import App
 
 logger = logger = Logger(__name__)
@@ -34,4 +35,5 @@ def init_ctx_obj(context: click.Context, verbose):
     context.obj.config = {"key": "oh so important"}
 
 
-main.add_command(hasher_)
+main.add_command(hash_)
+main.add_command(validate_)
