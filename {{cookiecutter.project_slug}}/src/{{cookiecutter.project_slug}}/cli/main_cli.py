@@ -5,22 +5,13 @@ import sys
 import click
 
 from ..cli.file_hash_cli import hasher_
-
+from .cli_app import App
 
 logger = logger = Logger(__name__)
 
 
-class App:
-    def __init__(self, config, verbosity: int = 0) -> None:
-        self.verbosity = verbosity
-        self.config = config
-
-    def __repr__(self):
-        return f"<{self.__class__.__name__}: verbosity={self.verbosity}, config={self.config}"
-
-
 @click.group()
-@click.option("-v", "--verbose", multiple=True, is_flag=True)
+@click.option("-v", "--verbose", count=True)
 @click.pass_context
 def main(ctx: click.Context, verbose):
     """Console script for {{cookiecutter.project_slug}}."""
@@ -38,7 +29,8 @@ def main(ctx: click.Context, verbose):
 
 
 def init_ctx_obj(context: click.Context, verbose):
-    context.obj = App({}, len(verbose))
+    """Init the context.obj custom object."""
+    context.obj = App({}, verbose)
     context.obj.config = {"key": "oh so important"}
 
 

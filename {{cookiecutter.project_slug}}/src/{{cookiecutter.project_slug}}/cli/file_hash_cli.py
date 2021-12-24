@@ -1,18 +1,22 @@
 from pathlib import Path
 from typing import Optional
+from logging import Logger
 
 import click
 
 # FIXME remove after dev
 from ..app_lib import file_hash
+from .cli_app import App
 
 # from {{cookiecutter.project_slug}}.app_lib import file_hash
 
+logger = logger = Logger(__name__)
 
-@click.group(name="hasher")
-@click.pass_context
-def hasher_(ctx: click.Context):
-    pass
+
+# @click.group(name="hasher")
+# @click.pass_context
+# def hasher_(ctx: click.Context):
+#     pass
 
 
 @click.command(name="validate")
@@ -56,5 +60,29 @@ def hash_(
     click.echo(ctx.obj)
 
 
-hasher_.add_command(validate_)
-hasher_.add_command(hash_)
+@click.group()
+@click.option(
+    "-v",
+    "--verbose",
+    count=True,
+    help="Level of verbosity in output. Can be used multiple times.",
+)
+@click.pass_context
+def main(ctx: click.Context, verbose):
+    """File Hash"""
+
+    init_ctx_obj(ctx, verbose)
+    # Hello message
+    # TODO make an About message
+
+    return 0
+
+
+def init_ctx_obj(context: click.Context, verbose):
+    """Init the context.obj custom object."""
+    context.obj = App({}, verbose)
+    # context.obj.config = {"key": "oh so important"}
+
+
+main.add_command(validate_)
+main.add_command(hash_)

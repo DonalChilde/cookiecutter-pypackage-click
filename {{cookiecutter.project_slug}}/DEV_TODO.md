@@ -23,6 +23,7 @@
   - check out cc for doc format examples
   - make modular docs, so its easy to remove example code
   - doc all the places to remove example code
+  - improve dev setup docs with material from cc
 - Git
   - git hooks
   - git badges
