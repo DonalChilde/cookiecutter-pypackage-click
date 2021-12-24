@@ -23,6 +23,8 @@ From the project directory, run
     git remote add origin https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}.git
     # install an editable link to source
     pip install -e .
+    # check that the tests pass
+    pytest
 
 
 Downloading project from github
