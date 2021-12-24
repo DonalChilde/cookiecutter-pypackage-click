@@ -1,12 +1,11 @@
 """conftest.py file for {{ cookiecutter.project_slug }}"""
 import json
 import logging
-from importlib import resources
-from pathlib import Path
-from logging.handlers import RotatingFileHandler
 from dataclasses import dataclass
+from importlib import resources
+from logging.handlers import RotatingFileHandler
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
-
 
 import pytest
 
@@ -34,7 +33,7 @@ def _logger(test_log_path):
 
 
 def configure_file_logger(
-    log_dir: str, logger_name: str, log_level: Union[str, int]
+    log_dir: str, logger_name: str, log_level: int
 ) -> logging.Logger:
     """Configure a logger with a RotatingFileHandler.
 
@@ -76,7 +75,7 @@ def log_file_handler(
 
 
 @pytest.fixture(scope="session", name="test_log_path")
-def test_log_path_(test_app_data_dir):
+def test_log_path_(test_app_data_dir) -> Path:
     """Make a test-log directory under the app data directory"""
     log_path = test_app_data_dir / Path("test-logs")
     print(f"Logging at: {log_path}")
@@ -84,33 +83,10 @@ def test_log_path_(test_app_data_dir):
 
 
 @pytest.fixture(scope="session", name="test_app_data_dir")
-def test_app_data_dir_(tmp_path_factory):
+def test_app_data_dir_(tmp_path_factory) -> Path:
     """make a temp directory for app data."""
-    test_app_data_dir = tmp_path_factory.mktemp("{{ cookiecutter.project_slug }}-")
+    test_app_data_dir = tmp_path_factory.mktemp("click_hash-")
     return test_app_data_dir
-
-
-# @pytest.fixture(scope="session")
-# def example_resource(logger: logging.Logger) -> dict:
-#     """Load a resource file from a package directory.
-
-#     An example of loading a single resource file.
-#     """
-#     try:
-#         resource_path: str = "tests.{{ cookiecutter.project_slug }}.resources"
-#         resource_name: str = "example.json"
-#         with resources.open_text(resource_path, resource_name) as data_file:
-#             data = json.load(data_file)
-#             logger.info("Loaded resource file %s from %s", resource_name, resource_path)
-#             return data
-#     except Exception as ex:
-#         logger.exception(
-#             "Unable to load resource file %s from %s Error msg %s",
-#             resource_name,
-#             resource_path,
-#             ex,
-#         )
-#         raise ex
 
 
 @pytest.fixture(scope="session", name="json_resources")
@@ -121,7 +97,9 @@ def json_resources_example_(logger: logging.Logger) -> Dict[str, FileResource]:
     Excludes __init__.py
     """
     json_resources = {}
-    resource_path: str = "tests.{{ cookiecutter.project_slug }}.json_resources"
+    resource_path: str = (
+        "tests.{{ cookiecutter.project_slug }}.resources.example.json_resources"
+    )
     resource_names = collect_resource_names(resource_path, [".json"])
     for name in resource_names:
         resource = load_json_resource(resource_path, name, logger)
@@ -164,7 +142,7 @@ def load_file_resources(
     if not resource_names:
         file_names = collect_resource_names(resource_path, include_suffixes)
     else:
-        file_name = resource_names
+        file_names = resource_names
     file_resources = {}
     for file_name in file_names:
         file_resource = load_file_resource(
@@ -231,7 +209,7 @@ def load_file_resource(
 def collect_resource_names(
     resource_path: str,
     include_suffixes: Optional[List[str]] = None,
-) -> List[Path]:
+) -> List[str]:
     """
     Returns a list of file names in a resource directory, excluding the __init__.py
 
