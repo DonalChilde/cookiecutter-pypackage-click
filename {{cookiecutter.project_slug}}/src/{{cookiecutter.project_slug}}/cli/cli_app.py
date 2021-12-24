@@ -4,4 +4,4 @@ class App:
         self.config = config
 
     def __repr__(self):
-        return f"<{self.__class__.__name__}: verbosity={self.verbosity}, config={self.config}"
+        return f"{self.__class__.__name__}=(verbosity={self.verbosity}, config={self.config})"
