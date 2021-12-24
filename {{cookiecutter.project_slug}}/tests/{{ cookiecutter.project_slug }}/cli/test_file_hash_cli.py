@@ -11,6 +11,7 @@ from click.testing import CliRunner
 # HASHER = "hasher"
 # # HASHER = ""
 
+
 def test_command_line_interface():
     """Test the CLI."""
     runner = CliRunner()
@@ -21,7 +22,8 @@ def test_command_line_interface():
     assert help_result.exit_code == 0
     assert "Show this message and exit." in help_result.output
 
-    def test_hash_file_with_md5():
+
+def test_hash_file_with_md5():
     """Test hashing a file."""
     # TODO
     # * make a file on the fly in temp dir
@@ -30,18 +32,21 @@ def test_command_line_interface():
     # * compare the hashes
     test_string = "this is a test."
     runner = CliRunner()
-    result = runner.invoke(cli.main, [str(HASHER), "hash","md5","-f","path to test file here"])
+    result = runner.invoke(cli.main, ["hash", "md5", "-f", "path to test file here"])
     assert result.exit_code == 0
     assert "Hello Foo" in result.output
     help_result = runner.invoke(cli.main, ["--help"])
     assert help_result.exit_code == 0
     assert "--help  Show this message and exit." in help_result.output
 
-    def test_hash_a_string():
-        pass
 
-    def test_hash_all_the_files():
-        pass
+def test_hash_a_string():
+    pass
 
-    def test_hash_with_multiple_methods():
-        pass
+
+def test_hash_all_the_files():
+    pass
+
+
+def test_hash_with_multiple_methods():
+    pass
