@@ -15,6 +15,9 @@ From the project directory, run
     source ./.venv/bin/activate
     # Make a local git repo
     ./scripts/run.sh git:init
+    # Initial commit
+    git add .
+    git commit -m "initial commit"
     # To set a github remote origin...
     # https://docs.github.com/en/github/using-git/adding-a-remote
     git remote add origin https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}.git
