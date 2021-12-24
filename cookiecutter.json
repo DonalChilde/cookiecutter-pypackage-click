@@ -2,7 +2,7 @@
   "full_name": "Chad Lowe",
   "email": "pfmsoft@gmail.com",
   "github_username": "DonalChilde",
-  "project_name": "CC Click Example",
+  "project_name": "Click Hash",
   "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
   "project_namespace": "",
   "project_namespace_separator": "",
