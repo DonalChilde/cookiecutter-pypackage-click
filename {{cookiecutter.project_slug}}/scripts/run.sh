@@ -22,7 +22,7 @@ PACKAGE="${PACKAGE:-{{ cookiecutter.project_slug }}}"
 # SRC_PATH="src/"
 BROWSER="google-chrome"
 CODE_PATHS=("./src" "./tests")
-PYTHON_VENV_VERSION="${PYTHON_VENV_VERSION:-3.9}"
+PYTHON_VENV_VERSION="${PYTHON_VENV_VERSION:-3.10}"
 # https://stackoverflow.com/questions/4774054/reliable-way-for-a-bash-script-to-get-the-full-path-to-itself
 SCRIPT_PATH=$(realpath $0)
 
