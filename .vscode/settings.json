@@ -21,5 +21,7 @@
 
   "restructuredtext.languageServer.disabled": false,
   "liveServer.settings.port": 5501,
-  "restructuredtext.confPath": ""
+  "restructuredtext.confPath": "",
+  "esbonio.server.enabled": true,
+  "esbonio.sphinx.confDir": ""
 }

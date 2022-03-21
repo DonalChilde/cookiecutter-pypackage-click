@@ -8,7 +8,6 @@ Sphinx
 sphinx-autobuild
 sphinx-autodoc-typehints
 sphinx_rtd_theme
-snooty-lextudio
 twine
 Click
 pytest
@@ -18,5 +17,10 @@ Faker
 pylint
 mypy
 doc8
-rstcheck
 pre-commit
+
+# Vscode packages
+#snooty-lextudio
+esbonio
+rst2html
+rstcheck
