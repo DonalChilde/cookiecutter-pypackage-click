@@ -25,6 +25,8 @@ From the project directory, run
     pip install -e .
     # check that the tests pass
     pytest
+    # generate the docs
+    ./scripts/run.sh docs:build
 
 
 Downloading project from github
