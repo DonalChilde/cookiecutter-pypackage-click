@@ -16,6 +16,7 @@ TEST_LOG_LEVEL = logging.DEBUG
 
 @dataclass
 class FileResource:
+    """Stores the file path and file contents."""
     file_path: Path
     data: Any
 
