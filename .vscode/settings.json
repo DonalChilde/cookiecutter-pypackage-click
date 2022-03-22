@@ -18,10 +18,7 @@
   },
   "insertDateString.format": "iso",
   "python.analysis.extraPaths": ["./src"],
-
-  "restructuredtext.languageServer.disabled": false,
   "liveServer.settings.port": 5501,
-  "restructuredtext.confPath": "",
   "esbonio.server.enabled": true,
   "esbonio.sphinx.confDir": ""
 }
