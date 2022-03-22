@@ -3,9 +3,10 @@ import json
 import logging
 from dataclasses import dataclass
 from importlib import resources
-from logging.handlers import RotatingFileHandler
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
+
+from {{cookiecutter.project_slug}}.logging import rotating_file_logger
 
 import pytest
 
@@ -23,55 +24,13 @@ class FileResource:
 def _logger(test_log_path):
     """A central logger that will log to file."""
     # log_file_name = f"{__name__}.log"
-    log_dir_path: Path = test_log_path / Path("test-logs")
+    log_dir: Path = test_log_path / Path("test-logs")
 
-    logger = configure_file_logger(
-        log_dir=log_dir_path, logger_name=__name__, log_level=TEST_LOG_LEVEL
+    logger = rotating_file_logger(
+        log_dir=log_dir, log_name=__name__, log_level=TEST_LOG_LEVEL
     )
 
     return logger
-
-
-def configure_file_logger(
-    log_dir: str, logger_name: str, log_level: int
-) -> logging.Logger:
-    """Configure a logger with a RotatingFileHandler.
-
-    Note: Calling this function more than once with the same logger_name
-    will result in duplicated logs.
-    """
-    log_file_name = f"{logger_name}.log"
-    logger_ = logging.getLogger(logger_name)
-    log_dir_path: Path = Path(log_dir)
-    log_dir_path.mkdir(parents=True, exist_ok=True)
-    log_file_path = log_dir_path / Path(log_file_name)
-    handler = log_file_handler(log_file_path, log_level=log_level)
-    logger_.addHandler(handler)
-    logger_.setLevel(log_level)
-    ############################################################
-    # NOTE add file handler to other library modules as needed #
-    ############################################################
-    # async_logger = logging.getLogger("eve_esi_jobs")
-    # async_logger.addHandler(file_handler)
-    # async_logger.setLevel(log_level)
-    logger_.info("Rotating File Logger initializd at %s", log_file_path)
-    return logger_
-
-
-def log_file_handler(
-    file_path: Path,
-    log_level: int = logging.WARNING,
-    format_string: Optional[str] = None,
-):
-    handler = RotatingFileHandler(file_path, maxBytes=102400, backupCount=10)
-    if format_string is None:
-        format_string = (
-            "%(asctime)s %(levelname)s:%(funcName)s: "
-            "%(message)s [in %(pathname)s:%(lineno)d]"
-        )
-    handler.setFormatter(logging.Formatter(format_string))
-    handler.setLevel(log_level)
-    return handler
 
 
 @pytest.fixture(scope="session", name="test_log_path")
