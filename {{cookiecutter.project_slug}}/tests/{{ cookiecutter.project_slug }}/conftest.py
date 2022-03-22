@@ -6,7 +6,7 @@ from importlib import resources
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
-from {{cookiecutter.project_slug}}.logging import rotating_file_logger
+from {{cookiecutter.project_slug}}.app_lib.logging import rotating_file_logger
 
 import pytest
 
