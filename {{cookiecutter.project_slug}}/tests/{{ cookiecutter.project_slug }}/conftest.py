@@ -215,15 +215,16 @@ def collect_resource_names(
 @pytest.fixture(autouse=True)
 def env_setup(monkeypatch, test_app_data_dir):
     """environment variables set for each test."""
+    # TODO add check for namespace slug, and add separator is needed
     monkeypatch.setenv(
-        "{{ cookiecutter.namespace_slug }}{{ cookiecutter.project_slug }}_TESTING",
+        "{{ cookiecutter.namespace_slug.upper() }}{% if cookiecutter.namespace_slug %}_{% endif %}{{ cookiecutter.project_slug.upper() }}_TESTING",
         "True",
     )
     monkeypatch.setenv(
-        "{{ cookiecutter.namespace_slug }}{{ cookiecutter.project_slug }}_LOG_LEVEL",
+        "{{ cookiecutter.namespace_slug.upper() }}{% if cookiecutter.namespace_slug %}_{% endif %}{{ cookiecutter.project_slug.upper() }}_LOG_LEVEL",
         str(APP_LOG_LEVEL),
     )
     monkeypatch.setenv(
-        "{{ cookiecutter.namespace_slug }}{{ cookiecutter.project_slug }}_APP_DIR",
+        "{{ cookiecutter.namespace_slug.upper() }}{% if cookiecutter.namespace_slug %}_{% endif %}{{ cookiecutter.project_slug.upper() }}_APP_DIR",
         str(test_app_data_dir),
     )
