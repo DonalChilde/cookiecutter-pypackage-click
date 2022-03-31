@@ -215,7 +215,6 @@ def collect_resource_names(
 @pytest.fixture(autouse=True)
 def env_setup(monkeypatch, test_app_data_dir):
     """environment variables set for each test."""
-    # TODO add check for namespace slug, and add separator is needed
     monkeypatch.setenv(
         "{{ cookiecutter.namespace_slug.upper() }}{% if cookiecutter.namespace_slug %}_{% endif %}{{ cookiecutter.project_slug.upper() }}_TESTING",
         "True",
