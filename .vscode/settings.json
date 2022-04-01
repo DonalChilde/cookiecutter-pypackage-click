@@ -19,6 +19,5 @@
   "insertDateString.format": "iso",
   "python.analysis.extraPaths": ["./src"],
   "liveServer.settings.port": 5501,
-  "esbonio.server.enabled": true,
-  "esbonio.sphinx.confDir": ""
+  "esbonio.server.enabled": true
 }
